@@ -8,6 +8,14 @@
         <link rel="stylesheet" href="./styleADM.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
         
     </head>
     <body>
@@ -38,9 +46,23 @@
         <main>
             <h3> Tabela de Cadastros</h3>
             <section>
-                <table>
-                    
-                   
+                <table id="tabela">
+
+                    <thead>
+                    <tr>
+                        <th>Chave</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Senha</th>
+                        <th>Confirmação Senha</th>
+                        <th>Ação</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+    
                 </table>
             </section>
             <br><br><br><br><br>
@@ -97,5 +119,85 @@
                 <p class="direitos">&copy Todos os Direitos Reservados <br><br> </p>
     
             </footer>
+
+            <script>
+                const dados = JSON.parse(localStorage.getItem('dados')) || [];
+                    const tabela = $('#tabela').DataTable({
+                    responsive: true,
+                    language: {
+                        "sProcessing": "Processando...",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sZeroRecords": "Nenhum registro encontrado",
+                        "sInfo": "Mostrando _START_ até _END_ de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                        "sInfoFiltered": "(filtrado de _MAX_ registros no total)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Pesquisar:",
+                        "sUrl": "",
+                        "oPaginate": {
+                            "sFirst": "Primeiro",
+                            "sPrevious": "Anterior",
+                            "sNext": "Próximo",
+                            "sLast": "Último"
+                            },
+                        "sAriaSortAsc": ": Ordenar coluna em ordem crescente",
+                        "sAriaSortDesc": ": Ordenar coluna em ordem decrescente"
+                    }
+                });
+               dados
+        
+                function exibirDados(){
+                    tabela.clear().draw();
+                    dados.forEach((item, chave) => {
+                        tabela.row.add([
+                            chave,
+                            item.nome,
+                            item.email,
+                            item.telefone,
+                            item.senha,
+                            item.confirmarSenha,
+                            `<a href="cadastro.html?chave=${chave}"><i class="fa-solid fa-pen fa-bounce"></i>
+                            <a href="#" onclick="remover(${chave})"><i class="fa-solid fa-trash"></i></a>
+                            `
+                        ]);
+                    });
+        
+                    tabela.draw();
+                }
+        
+                function remover(chave){
+                    dados.splice(chave, 1);
+                    localStorage.setItem('dados', JSON.stringify(dados));
+                    window.location.href = "./adm.html";
+                }
+        
+                exibirDados();
+
+
+                const style = document.createElement('style');
+                style.innerHTML = `
+                #tabela{
+                    background-color: #fff;
+                    border: 3px solid #a69a90;
+                }
+
+                #tabela th:first-child, #tabela th:last-child{
+                    max-width: 100px;
+                    text-align: center;
+                }
+                
+                tr:nth-child(2n+1){
+                    background-color: #a69a90 !important;
+                }
+                            
+                
+                
+                    
+                `;
+        
+                document.head.appendChild(style);
+
+            </script>
+
         </body> 
     </html>

@@ -41,7 +41,7 @@
             <h2>Cadastre-se</h2>
             <p>É novo? Crie sua conta em instantes</p>
 
-            <form>
+            <form id="form">
                 <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
                 <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
                 <input type="text" id="telefone" name="telefone" placeholder="Digite seu telefone" required>
@@ -54,7 +54,7 @@
             </form>
 
             <div>
-            <a href="login.html"><button type="submit" id="cadastrar">Cadastrar</button></a>
+            <a href="login.html"><button type="submit" onclick="salvar()" id="cadastrar">Cadastrar</button></a>
             <br><br> Já possui conta? Clique no botão ao lado para entrar
             <a href="login.html"><button type="button" id="botaologin">Login</button></a>
             </div>
@@ -116,7 +116,40 @@
     </footer>
 
     <script>
-        
+        const form = document.getElementById('form');
+        const nome = document.getElementById('nome');
+        const email = document.getElementById('email');
+        const telefone = document.getElementById('telefone');
+        const senha = document.getElementById('senha');
+        const confirmarSenha = document.getElementById('confirmarSenha');
+        const key = new URLSearchParams(window.location.search).get('chave');        
+        var dados = JSON.parse(localStorage.getItem('dados')) || [];
+
+        if(key){
+            nome.value = dados[key].nome;
+            email.value = dados[key].email;
+            telefone.value = dados[key].telefone;
+            senha.value = dados[key].senha;
+            confirmarSenha.value = dados[key].confirmarSenha;
+        }
+
+        function salvar(){
+            let novoNome = nome.value;
+            let novoEmail = email.value;
+            let novoTelefone = telefone.value;
+            let novoSenha = senha.value;
+            let novoconfirmarSenha = confirmarSenha.value;
+
+            if(key){
+                dados[key] = {nome: novoNome, email:novoEmail, telefone:novoTelefone, senha:novoSenha, confirmarSenha:novoconfirmarSenha};
+            }else{
+                dados.push({nome: novoNome, email:novoEmail, telefone:novoTelefone, senha:novoSenha, confirmarSenha:novoconfirmarSenha});
+            }
+
+            localStorage.setItem('dados', JSON.stringify(dados));
+            window.location.href = "./cadastro.html"
+        }
+
 
     </script>
 
